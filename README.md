@@ -1,7 +1,7 @@
 # 🌀 LOOPI — Things Worth Finding
 > **Concept Store cho những bạn trẻ yêu thích những món đồ đẹp, hữu ích và đầy cảm hứng.**
 
-[![GitHub Pages Deployment](https://img.shields.io/badge/Demo-Live%20on%20GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://huyhuyhuy12.github.io/loopistore/)
+[![GitHub Pages Deployment](https://img.shields.io/badge/Demo-Live%20on%20GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://loopiiii.github.io/loopistore/)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -12,7 +12,7 @@
 
 **LOOPI Store** là một website thương mại điện tử hiện đại, mang ngôn ngữ thiết kế tươi mới, phong cách Gen Z tinh tế với gam màu chủ đạo Xanh Navy (`#2A5298`) kết hợp Hồng Phấn (`#D26E9E`). Website được xây dựng thuần túy bằng **HTML5, CSS3 và Vanilla JavaScript (ES6+)**, không phụ thuộc thư viện nặng nề, tốc độ tải trang cực nhanh và tương thích hoàn hảo trên mọi thiết bị.
 
-🔗 **Xem trực tiếp (Live Demo):** [https://huyhuyhuy12.github.io/loopistore/](https://huyhuyhuy12.github.io/loopistore/)
+🔗 **Xem trực tiếp (Live Demo):** [https://loopiiii.github.io/loopistore/](https://loopiiii.github.io/loopistore/)
 
 ---
 
