@@ -1,11 +1,11 @@
 /**
- * LOOPI Retail - Cart & State Management
- * Handles Cart, Wishlist, Discounts, and Toast Notifications
+ * LOOPI - Giỏ Hàng & Quản Lý Trạng Thái (bản địa hóa Việt Nam)
+ * Giỏ hàng, danh sách yêu thích, mã giảm giá và thông báo toast.
+ * Phụ thuộc: products.js (PRODUCTS, formatVND, FREE_SHIP_THRESHOLD, SHIPPING_FEE)
  */
 
 const CART_STORAGE_KEY = "loopi_cart_v1";
 const WISHLIST_STORAGE_KEY = "loopi_wishlist_v1";
-const FREE_SHIPPING_THRESHOLD = 50.00;
 
 class CartManager {
   constructor() {
@@ -13,9 +13,9 @@ class CartManager {
     this.wishlist = this.loadWishlist();
     this.activeCoupon = null;
     this.validCoupons = {
-      "LOOPI15": { discount: 0.15, description: "15% off Welcome Discovery" },
-      "FINDJOY": { discount: 0.10, description: "10% off Joy Discount" },
-      "SURPRISE10": { discount: 0.10, description: "10% Surprise Roulette Perk" }
+      "LOOPI15": { discount: 0.15, description: "Giảm 15% – Chào mừng bạn mới" },
+      "FINDJOY": { discount: 0.10, description: "Giảm 10% – Niềm vui khám phá" },
+      "SURPRISE10": { discount: 0.10, description: "Giảm 10% – Ưu đãi vòng quay may mắn" }
     };
 
     this.init();
@@ -64,47 +64,39 @@ class CartManager {
   }
 
   bindEvents() {
-    // Open/Close Cart Drawer
     const cartBtn = document.getElementById("header-cart-btn");
     const cartCloseBtn = document.getElementById("cart-drawer-close");
     const cartBackdrop = document.getElementById("cart-drawer-backdrop");
     const continueShoppingBtn = document.getElementById("cart-empty-cta");
 
-    if (cartBtn) cartBtn.addEventListener("click", () => this.openCart());
-    if (cartCloseBtn) cartCloseBtn.addEventListener("click", () => this.closeCart());
-    if (cartBackdrop) cartBackdrop.addEventListener("click", () => this.closeCart());
-    if (continueShoppingBtn) {
-      continueShoppingBtn.addEventListener("click", () => {
-        this.closeCart();
-        const shopSection = document.getElementById("shop");
-        if (shopSection) shopSection.scrollIntoView({ behavior: "smooth" });
-      });
-    }
+    cartBtn?.addEventListener("click", () => this.openCart());
+    cartCloseBtn?.addEventListener("click", () => this.closeCart());
+    cartBackdrop?.addEventListener("click", () => this.closeCart());
+    continueShoppingBtn?.addEventListener("click", () => {
+      this.closeCart();
+      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+    });
 
     // Coupon form
     const couponForm = document.getElementById("cart-coupon-form");
-    if (couponForm) {
-      couponForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const input = document.getElementById("cart-coupon-input");
-        if (input) this.applyCoupon(input.value.trim().toUpperCase());
-      });
-    }
+    couponForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = document.getElementById("cart-coupon-input");
+      if (input) this.applyCoupon(input.value.trim().toUpperCase());
+    });
 
-    // Wishlist Drawer open/close
+    // Wishlist Drawer
     const wishlistBtn = document.getElementById("header-wishlist-btn");
     const wishlistCloseBtn = document.getElementById("wishlist-drawer-close");
     const wishlistBackdrop = document.getElementById("wishlist-drawer-backdrop");
 
-    if (wishlistBtn) wishlistBtn.addEventListener("click", () => this.openWishlist());
-    if (wishlistCloseBtn) wishlistCloseBtn.addEventListener("click", () => this.closeWishlist());
-    if (wishlistBackdrop) wishlistBackdrop.addEventListener("click", () => this.closeWishlist());
+    wishlistBtn?.addEventListener("click", () => this.openWishlist());
+    wishlistCloseBtn?.addEventListener("click", () => this.closeWishlist());
+    wishlistBackdrop?.addEventListener("click", () => this.closeWishlist());
 
-    // Checkout button
+    // Checkout
     const checkoutBtn = document.getElementById("cart-checkout-btn");
-    if (checkoutBtn) {
-      checkoutBtn.addEventListener("click", () => this.handleCheckout());
-    }
+    checkoutBtn?.addEventListener("click", () => this.handleCheckout());
   }
 
   openCart() {
@@ -168,7 +160,7 @@ class CartManager {
     this.saveCart();
 
     if (showToast) {
-      this.showToast(`✨ Added "${product.name}" to cart!`, "cart");
+      this.showToast(`✨ Đã thêm "${product.name}" vào giỏ hàng!`, "cart");
       this.bounceCartIcon();
     }
   }
@@ -190,24 +182,24 @@ class CartManager {
     if (index > -1) {
       const removed = this.cart.splice(index, 1)[0];
       this.saveCart();
-      this.showToast(`Removed "${removed.name}" from cart`, "info");
+      this.showToast(`Đã xóa "${removed.name}" khỏi giỏ hàng`, "info");
     }
   }
 
   toggleWishlist(productId) {
     const index = this.wishlist.indexOf(productId);
     const product = PRODUCTS.find(p => p.id === productId);
-    const prodName = product ? product.name : "Product";
+    const prodName = product ? product.name : "Sản phẩm";
 
     if (index > -1) {
       this.wishlist.splice(index, 1);
       this.saveWishlist();
-      this.showToast(`Removed "${prodName}" from wishlist`, "info");
+      this.showToast(`Đã bỏ "${prodName}" khỏi yêu thích`, "info");
       return false;
     } else {
       this.wishlist.push(productId);
       this.saveWishlist();
-      this.showToast(`💖 Added "${prodName}" to wishlist!`, "wishlist");
+      this.showToast(`💖 Đã thêm "${prodName}" vào yêu thích!`, "wishlist");
       return true;
     }
   }
@@ -222,17 +214,17 @@ class CartManager {
         code: code,
         ...this.validCoupons[code]
       };
-      this.showToast(`🎉 Code "${code}" applied: ${this.activeCoupon.description}`, "success");
+      this.showToast(`🎉 Áp dụng mã "${code}" thành công: ${this.activeCoupon.description}`, "success");
       this.updateUI();
     } else {
-      this.showToast(`❌ Invalid code. Try "LOOPI15" for 15% off!`, "error");
+      this.showToast(`❌ Mã không hợp lệ. Thử "LOOPI15" để giảm 15%!`, "error");
     }
   }
 
   removeCoupon() {
     this.activeCoupon = null;
     this.updateUI();
-    this.showToast("Coupon removed", "info");
+    this.showToast("Đã hủy mã giảm giá", "info");
   }
 
   getSubtotal() {
@@ -241,7 +233,7 @@ class CartManager {
 
   getDiscount() {
     if (!this.activeCoupon) return 0;
-    return this.getSubtotal() * this.activeCoupon.discount;
+    return Math.round(this.getSubtotal() * this.activeCoupon.discount);
   }
 
   getTotalItems() {
@@ -252,41 +244,42 @@ class CartManager {
     const totalItems = this.getTotalItems();
     const subtotal = this.getSubtotal();
     const discount = this.getDiscount();
-    const shipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 5.00;
+    const isFreeShip = subtotal >= FREE_SHIP_THRESHOLD || subtotal === 0;
+    const shipping = isFreeShip ? 0 : SHIPPING_FEE;
     const finalTotal = Math.max(0, subtotal - discount + shipping);
 
-    // Update Header Badges
+    // Header badge
     const cartBadge = document.getElementById("header-cart-count");
     if (cartBadge) {
       cartBadge.textContent = totalItems;
       cartBadge.style.display = totalItems > 0 ? "flex" : "none";
     }
 
-    // Update Cart Title
+    // Cart title count
     const cartTitleCount = document.getElementById("cart-header-count");
     if (cartTitleCount) {
-      cartTitleCount.textContent = `(${totalItems} ${totalItems === 1 ? 'item' : 'items'})`;
+      cartTitleCount.textContent = `(${totalItems} sản phẩm)`;
     }
 
-    // Free Shipping Progress Bar
+    // Shipping progress
     const shippingBar = document.getElementById("shipping-progress-bar");
     const shippingText = document.getElementById("shipping-progress-text");
     if (shippingBar && shippingText) {
       if (subtotal === 0) {
         shippingBar.style.width = "0%";
-        shippingText.innerHTML = `Add <strong>$${FREE_SHIPPING_THRESHOLD.toFixed(2)}</strong> more for <strong>Free Worldwide Shipping!</strong>`;
-      } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+        shippingText.innerHTML = `Mua thêm <strong>${formatVND(FREE_SHIP_THRESHOLD)}</strong> để được <strong>miễn phí vận chuyển toàn quốc!</strong>`;
+      } else if (subtotal >= FREE_SHIP_THRESHOLD) {
         shippingBar.style.width = "100%";
-        shippingText.innerHTML = `🎉 You unlocked <strong>Free Worldwide Shipping!</strong>`;
+        shippingText.innerHTML = `🎉 Bạn đã được <strong>miễn phí vận chuyển toàn quốc!</strong>`;
       } else {
-        const remaining = (FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2);
-        const pct = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+        const remaining = FREE_SHIP_THRESHOLD - subtotal;
+        const pct = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
         shippingBar.style.width = `${pct}%`;
-        shippingText.innerHTML = `Add <strong>$${remaining}</strong> more for <strong>Free Shipping!</strong>`;
+        shippingText.innerHTML = `Mua thêm <strong>${formatVND(remaining)}</strong> để được <strong>miễn phí vận chuyển!</strong>`;
       }
     }
 
-    // Cart Items Container
+    // Cart items
     const cartList = document.getElementById("cart-items-list");
     const cartEmpty = document.getElementById("cart-empty-state");
     const cartFooter = document.getElementById("cart-drawer-footer");
@@ -305,7 +298,7 @@ class CartManager {
             <div class="cart-item-details">
               <span class="cart-item-cat">${item.categoryName}</span>
               <h4 class="cart-item-title">${item.name}</h4>
-              <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+              <div class="cart-item-price">${formatVND(item.price)}</div>
               <div class="cart-item-controls">
                 <div class="qty-stepper">
                   <button class="qty-btn minus" onclick="cartManager.updateQuantity('${item.id}', ${item.quantity - 1})">−</button>
@@ -317,7 +310,7 @@ class CartManager {
                     <polyline points="3 6 5 6 21 6"></polyline>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                   </svg>
-                  Remove
+                  Xóa
                 </button>
               </div>
             </div>
@@ -326,28 +319,27 @@ class CartManager {
       }
     }
 
-    // Update Totals
+    // Totals
     const subtotalEl = document.getElementById("cart-subtotal");
     const discountEl = document.getElementById("cart-discount");
     const discountRow = document.getElementById("cart-discount-row");
     const shippingEl = document.getElementById("cart-shipping");
     const totalEl = document.getElementById("cart-total");
 
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+    if (subtotalEl) subtotalEl.textContent = formatVND(subtotal);
     if (discountRow && discountEl) {
       if (discount > 0) {
         discountRow.style.display = "flex";
-        discountEl.textContent = `-$${discount.toFixed(2)} (${this.activeCoupon.code})`;
+        discountEl.textContent = `-${formatVND(discount)} (${this.activeCoupon.code})`;
       } else {
         discountRow.style.display = "none";
       }
     }
     if (shippingEl) {
-      shippingEl.textContent = shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
-      if (shipping === 0) shippingEl.classList.add("free-badge");
-      else shippingEl.classList.remove("free-badge");
+      shippingEl.textContent = shipping === 0 ? "MIỄN PHÍ" : formatVND(shipping);
+      shippingEl.classList.toggle("free-badge", shipping === 0);
     }
-    if (totalEl) totalEl.textContent = `$${finalTotal.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = formatVND(finalTotal);
   }
 
   updateWishlistUI() {
@@ -357,7 +349,6 @@ class CartManager {
       countBadge.style.display = this.wishlist.length > 0 ? "flex" : "none";
     }
 
-    // Update Wishlist drawer content
     const listEl = document.getElementById("wishlist-items-list");
     const emptyEl = document.getElementById("wishlist-empty-state");
 
@@ -374,13 +365,13 @@ class CartManager {
             <div class="wishlist-item-details">
               <span class="cart-item-cat">${prod.categoryName}</span>
               <h4 class="cart-item-title">${prod.name}</h4>
-              <div class="cart-item-price">$${prod.price.toFixed(2)}</div>
+              <div class="cart-item-price">${formatVND(prod.price)}</div>
               <div class="wishlist-item-actions">
                 <button class="btn btn-primary btn-sm" onclick="cartManager.addItem('${prod.id}'); cartManager.toggleWishlist('${prod.id}');">
-                  Move to Cart
+                  Chuyển vào giỏ
                 </button>
                 <button class="cart-item-remove" onclick="cartManager.toggleWishlist('${prod.id}')">
-                  Remove
+                  Xóa
                 </button>
               </div>
             </div>
@@ -389,38 +380,38 @@ class CartManager {
       }
     }
 
-    // Refresh heart buttons across the page
+    // Refresh heart buttons
     document.querySelectorAll(".product-fav-btn").forEach(btn => {
       const pid = btn.getAttribute("data-id");
       if (pid && this.isWishlisted(pid)) {
         btn.classList.add("active");
-        btn.setAttribute("aria-label", "Remove from Wishlist");
+        btn.setAttribute("aria-label", "Bỏ khỏi yêu thích");
       } else if (pid) {
         btn.classList.remove("active");
-        btn.setAttribute("aria-label", "Add to Wishlist");
+        btn.setAttribute("aria-label", "Thêm vào yêu thích");
       }
     });
   }
 
   handleCheckout() {
     if (this.cart.length === 0) {
-      this.showToast("Your cart is empty! Discover products first.", "info");
+      this.showToast("Giỏ hàng đang trống! Hãy khám phá sản phẩm trước nhé.", "info");
       return;
     }
 
     const modal = document.getElementById("checkout-success-modal");
     if (modal) {
       const orderNum = "LP-" + Math.floor(100000 + Math.random() * 900000);
-      const totalAmount = document.getElementById("cart-total")?.textContent || "$0.00";
+      const totalAmount = document.getElementById("cart-total")?.textContent || "0₫";
 
       const orderNumEl = document.getElementById("order-number-display");
       const orderTotalEl = document.getElementById("order-total-display");
       if (orderNumEl) orderNumEl.textContent = orderNum;
       if (orderTotalEl) orderTotalEl.textContent = totalAmount;
 
-      // Close cart drawer and open success modal
       this.closeCart();
       modal.classList.add("active");
+      document.getElementById("checkout-modal-backdrop")?.classList.add("active");
       document.body.style.overflow = "hidden";
 
       // Clear cart
@@ -428,10 +419,7 @@ class CartManager {
       this.activeCoupon = null;
       this.saveCart();
 
-      // Trigger celebration confetti
-      if (window.confettiEffect) {
-        window.confettiEffect();
-      }
+      window.confettiEffect?.();
     }
   }
 
@@ -439,7 +427,7 @@ class CartManager {
     const icon = document.getElementById("header-cart-btn");
     if (icon) {
       icon.classList.remove("bounce-anim");
-      void icon.offsetWidth; // trigger reflow
+      void icon.offsetWidth;
       icon.classList.add("bounce-anim");
     }
   }
@@ -475,7 +463,6 @@ class CartManager {
 
     container.appendChild(toast);
 
-    // Auto remove after 3.8s
     setTimeout(() => {
       if (toast.parentElement) {
         toast.classList.add("fade-out");

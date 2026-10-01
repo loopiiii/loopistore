@@ -1,0 +1,52 @@
+# =============================================
+# LOOPI Store – .gitignore
+# =============================================
+
+# Backup files
+*.bak
+index.html.bak
+backup/
+assets/images_backup/
+
+# Script output / temp files
+loopi
+my
+
+index.html.bak
+backup/
+assets/images_backup/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V8
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Zip archives
+*.zip
+
+# Node (nếu sau này dùng)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.production
+
+# Build output (nếu sau này dùng bundler)
+dist/
+build/
+
+# Temp files
+*.tmp
+*.log
