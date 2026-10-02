@@ -1154,6 +1154,7 @@ function initPromoVideo() {
       if (iconSound) iconSound.style.display = "none";
       if (iconMuted) iconMuted.style.display = "block";
     } else {
+      video.volume = 1.0;
       if (iconSound) iconSound.style.display = "block";
       if (iconMuted) iconMuted.style.display = "none";
       if (currentShot.startsWith("shot")) {
