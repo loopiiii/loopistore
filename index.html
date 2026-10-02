@@ -267,11 +267,107 @@
     <section class="promo-video-section" id="promo-video">
       <div class="container">
         <div class="section-header text-center">
-          <span class="section-tag">LOOPI CINEMA • 24S</span>
+          <span class="section-tag" id="promo-section-badge">LOOPI CINEMA • SHOT 01</span>
           <h2 class="section-title">Things Worth Finding</h2>
           <p class="section-subtitle">
-            Cảm nhận nhịp sống, sự tinh tế và niềm vui bất ngờ trong từng món đồ nhỏ được tuyển chọn kỹ lưỡng.
+            Cảm nhận nhịp sống, sự tinh tế và niềm vui bất ngờ trong từng chuyển động thương hiệu LOOPI.
           </p>
+
+          <!-- Shot Switcher Control -->
+          <div class="promo-shot-switcher" role="tablist" aria-label="Chọn phân cảnh video">
+            <button
+              class="promo-shot-tab active"
+              id="tab-shot-full"
+              role="tab"
+              aria-selected="true"
+              data-video-src="assets/videos/loopi-commercial-final.mp4"
+              data-poster="assets/images/hero_composition.jpg"
+              data-tag="FINAL MASTER • 30S"
+              data-fps="60FPS • 4K"
+              data-title="Things Worth Finding • Master Film"
+              data-section-badge="LOOPI CINEMA • 30S MASTER FILM">
+              <span class="shot-tab-dot"></span>
+              <span>Full Film (30s)</span>
+            </button>
+            <button
+              class="promo-shot-tab"
+              id="tab-shot-01"
+              role="tab"
+              aria-selected="false"
+              data-video-src="assets/videos/loopi-shot-01.mp4"
+              data-poster="assets/images/hero_composition.jpg"
+              data-tag="SHOT 01 • OPENING"
+              data-fps="60FPS • 4K"
+              data-title="The Reveal • Endless Discovery"
+              data-section-badge="LOOPI CINEMA • SHOT 01 (5S)">
+              <span>Shot 01: Reveal</span>
+            </button>
+            <button
+              class="promo-shot-tab"
+              id="tab-shot-02"
+              role="tab"
+              aria-selected="false"
+              data-video-src="assets/videos/loopi-shot-02.mp4"
+              data-poster="assets/images/prod_lamp.jpg"
+              data-tag="SHOT 02 • MACRO HERO"
+              data-fps="60FPS • 4K"
+              data-title="Luna Desk Lamp • Craft & Form"
+              data-section-badge="LOOPI CINEMA • SHOT 02 (5S)">
+              <span>Shot 02: Macro</span>
+            </button>
+            <button
+              class="promo-shot-tab"
+              id="tab-shot-03"
+              role="tab"
+              aria-selected="false"
+              data-video-src="assets/videos/loopi-shot-03.mp4"
+              data-poster="assets/images/prod_candle.jpg"
+              data-tag="SHOT 03 • STORE JOURNEY"
+              data-fps="60FPS • 4K"
+              data-title="Continuous Discovery • Concept Store"
+              data-section-badge="LOOPI CINEMA • SHOT 03 (5S)">
+              <span>Shot 03: Journey</span>
+            </button>
+            <button
+              class="promo-shot-tab"
+              id="tab-shot-04"
+              role="tab"
+              aria-selected="false"
+              data-video-src="assets/videos/loopi-shot-04.mp4"
+              data-poster="assets/images/prod_plant.jpg"
+              data-tag="SHOT 04 • DISCOVERY LOOP"
+              data-fps="60FPS • 4K"
+              data-title="The Discovery Loop • Orbit & Find"
+              data-section-badge="LOOPI CINEMA • SHOT 04 (5S)">
+              <span>Shot 04: Loop Orbit</span>
+            </button>
+            <button
+              class="promo-shot-tab"
+              id="tab-shot-05"
+              role="tab"
+              aria-selected="false"
+              data-video-src="assets/videos/loopi-shot-05.mp4"
+              data-poster="assets/images/hero.jpg"
+              data-tag="SHOT 05 • DELIGHT"
+              data-fps="60FPS • 4K"
+              data-title="Moment of Delight • Genuine Discovery"
+              data-section-badge="LOOPI CINEMA • SHOT 05 (5S)">
+              <span>Shot 05: Delight</span>
+            </button>
+            <button
+              class="promo-shot-tab"
+              id="tab-shot-06"
+              role="tab"
+              aria-selected="false"
+              data-video-src="assets/videos/loopi-shot-06.mp4"
+              data-poster="assets/images/prod_lamp.jpg"
+              data-tag="SHOT 06 • FINALE"
+              data-fps="60FPS • 4K"
+              data-title="LOOPI • Things Worth Finding"
+              data-section-badge="LOOPI CINEMA • SHOT 06 (5S)">
+              <span>Shot 06: Finale</span>
+            </button>
+          </div>
         </div>
 
         <div class="promo-video-container" id="loopi-promo-card">
@@ -279,33 +375,40 @@
             <video
               id="loopi-promo-video"
               class="promo-video-element"
-              poster="assets/images/hero.jpg"
+              poster="assets/images/hero_composition.jpg"
               playsinline
               muted
               loop
               preload="metadata"
-              aria-label="Phim quảng cáo thương hiệu LOOPI">
-              <source src="assets/videos/loopi-commercial.mp4" type="video/mp4" />
+              aria-label="Phim thương hiệu LOOPI - Things Worth Finding">
+              <source id="loopi-promo-source" src="assets/videos/loopi-commercial-final.mp4" type="video/mp4" />
               Trình duyệt của bạn không hỗ trợ phát video trực tiếp.
             </video>
 
             <!-- Video Ambient Gradient & Overlay -->
             <div class="promo-video-overlay">
               <div class="promo-overlay-top">
-                <span class="promo-pill">
+                <span class="promo-pill" id="promo-pill-label">
                   <span class="live-dot"></span>
-                  <span>BRAND FILM</span>
+                  <span id="promo-pill-text">FINAL MASTER • 30S</span>
                 </span>
-                <span class="promo-quality-badge">HD • 30FPS</span>
+                <span class="promo-quality-badge" id="promo-quality-badge">60FPS • 4K</span>
               </div>
 
               <div class="promo-overlay-bottom">
                 <div class="promo-caption">
                   <span class="caption-tag">LOOPI STORE</span>
-                  <h3 class="caption-title">Curated For The Curious</h3>
+                  <h3 class="caption-title" id="promo-caption-title">Things Worth Finding • Master Film</h3>
                 </div>
 
                 <div class="promo-actions">
+                  <button class="promo-ctrl-btn" id="promo-replay-btn" title="Phát lại từ đầu" aria-label="Phát lại từ đầu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                      <path d="M3 3v5h5"></path>
+                    </svg>
+                  </button>
+
                   <button class="promo-ctrl-btn" id="promo-play-btn" title="Phát hoặc Tạm dừng" aria-label="Phát hoặc tạm dừng video">
                     <svg class="icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                       <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
@@ -316,7 +419,7 @@
                     </svg>
                   </button>
 
-                  <button class="promo-ctrl-btn" id="promo-sound-btn" title="Bật hoặc Tắt tiếng" aria-label="Bật hoặc tắt tiếng video">
+                  <button class="promo-ctrl-btn" id="promo-sound-btn" title="Bật hoặc Tắt âm thanh phim" aria-label="Bật hoặc tắt âm thanh phim">
                     <svg class="icon-muted" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <line x1="23" y1="9" x2="17" y2="15"></line>

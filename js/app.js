@@ -724,13 +724,21 @@ function initScrollEffects() {
 }
 
 /**
- * Promotional Cinematic Video Controller (LoopiPromo)
- * Tự động phát khi cuộn vào viewport, tiết kiệm pin khi ra ngoài, hỗ trợ nút Play/Mute
+ * Promotional Cinematic Video & Shot 01 Controller (LoopiPromo)
+ * Hỗ trợ chuyển đổi giữa Shot 01 (The Reveal - 5s) và Full Film (24s).
+ * Tự động phát khi cuộn vào viewport, hỗ trợ Web Audio cinematic swell/chime cho Shot 01.
  */
 function initPromoVideo() {
   const video = document.getElementById("loopi-promo-video");
   const playBtn = document.getElementById("promo-play-btn");
+  const replayBtn = document.getElementById("promo-replay-btn");
   const soundBtn = document.getElementById("promo-sound-btn");
+  const tabs = document.querySelectorAll(".promo-shot-tab");
+  const sectionBadge = document.getElementById("promo-section-badge");
+  const pillText = document.getElementById("promo-pill-text");
+  const qualityBadge = document.getElementById("promo-quality-badge");
+  const captionTitle = document.getElementById("promo-caption-title");
+
   if (!video) return;
 
   const iconPlay = playBtn?.querySelector(".icon-play");
@@ -738,12 +746,400 @@ function initPromoVideo() {
   const iconSound = soundBtn?.querySelector(".icon-sound");
   const iconMuted = soundBtn?.querySelector(".icon-muted");
 
+  let currentShot = "full";
+  let audioCtx = null;
+
+  // Web Audio Synth for Shot 01 & Shot 02 cinematic soundscapes
+  function playCinematicShotSound() {
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!audioCtx) audioCtx = new AudioContextClass();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      const now = audioCtx.currentTime;
+
+      if (currentShot === "shot01") {
+        // 1. Warm Sub Bass Swell
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(65, now);
+        osc1.frequency.exponentialRampToValueAtTime(110, now + 2.2);
+
+        gain1.gain.setValueAtTime(0.001, now);
+        gain1.gain.linearRampToValueAtTime(0.25, now + 1.8);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 4.5);
+
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 4.8);
+
+        // 2. Soft airy whoosh around 1.2s - 2.8s
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(400, now + 1.0);
+        filter.frequency.exponentialRampToValueAtTime(1600, now + 2.2);
+        filter.Q.setValueAtTime(3.0, now + 1.0);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.001, now + 1.0);
+        noiseGain.gain.linearRampToValueAtTime(0.12, now + 2.0);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 3.2);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        whiteNoise.start(now + 1.0);
+        whiteNoise.stop(now + 3.3);
+
+        // 3. Crystal Chime Sparkle at 2.2s
+        const chimeFreqs = [1046.5, 1567.98, 2093.0];
+        chimeFreqs.forEach((freq, idx) => {
+          const chimeOsc = audioCtx.createOscillator();
+          const chimeGain = audioCtx.createGain();
+          chimeOsc.type = "sine";
+          chimeOsc.frequency.setValueAtTime(freq, now + 2.1 + idx * 0.04);
+
+          chimeGain.gain.setValueAtTime(0.001, now + 2.1 + idx * 0.04);
+          chimeGain.gain.linearRampToValueAtTime(0.08 / (idx + 1), now + 2.15 + idx * 0.04);
+          chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.2 + idx * 0.04);
+
+          chimeOsc.connect(chimeGain);
+          chimeGain.connect(audioCtx.destination);
+          chimeOsc.start(now + 2.1 + idx * 0.04);
+          chimeOsc.stop(now + 4.5);
+        });
+      } else if (currentShot === "shot02") {
+        // Shot 02 Macro Discovery Audio:
+        // A. Camera pull-back airy whoosh
+        const bufferSize = audioCtx.sampleRate * 2.5;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(800, now);
+        filter.frequency.exponentialRampToValueAtTime(2800, now + 1.8);
+        filter.frequency.exponentialRampToValueAtTime(400, now + 3.2);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.001, now);
+        noiseGain.gain.linearRampToValueAtTime(0.10, now + 1.2);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        whiteNoise.start(now);
+        whiteNoise.stop(now + 3.2);
+
+        // B. Subtle tactile click / acoustic resonance at full reveal (2.2s)
+        const clickOsc = audioCtx.createOscillator();
+        const clickGain = audioCtx.createGain();
+        clickOsc.type = "triangle";
+        clickOsc.frequency.setValueAtTime(440, now + 2.1);
+        clickOsc.frequency.exponentialRampToValueAtTime(220, now + 2.25);
+
+        clickGain.gain.setValueAtTime(0.001, now + 2.1);
+        clickGain.gain.linearRampToValueAtTime(0.14, now + 2.12);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+
+        clickOsc.connect(clickGain);
+        clickGain.connect(audioCtx.destination);
+        clickOsc.start(now + 2.1);
+        clickOsc.stop(now + 2.45);
+
+        // C. Warm harmonic discovery pad holding until 4.8s
+        const padOsc = audioCtx.createOscillator();
+        const padGain = audioCtx.createGain();
+        padOsc.type = "sine";
+        padOsc.frequency.setValueAtTime(329.63, now + 1.8); // E4
+        padGain.gain.setValueAtTime(0.001, now + 1.8);
+        padGain.gain.linearRampToValueAtTime(0.09, now + 2.4);
+        padGain.gain.exponentialRampToValueAtTime(0.001, now + 4.8);
+
+        padOsc.connect(padGain);
+        padGain.connect(audioCtx.destination);
+        padOsc.start(now + 1.8);
+        padOsc.stop(now + 4.9);
+      } else if (currentShot === "shot03") {
+        // Shot 03 Store Journey: continuous forward movement, subtle whooshes
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.exponentialRampToValueAtTime(220, now + 3.5);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 1.5);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 4.8);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 4.9);
+      } else if (currentShot === "shot04") {
+        // Shot 04 The Discovery Loop:
+        // A. Smooth circular whoosh synchronized with orbit
+        const bufferSize = audioCtx.sampleRate * 3.0;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(500, now);
+        filter.frequency.exponentialRampToValueAtTime(2200, now + 2.2);
+        filter.frequency.exponentialRampToValueAtTime(600, now + 4.2);
+        filter.Q.setValueAtTime(2.5, now);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.001, now);
+        noiseGain.gain.linearRampToValueAtTime(0.15, now + 2.0);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 4.5);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        whiteNoise.start(now);
+        whiteNoise.stop(now + 4.6);
+
+        // B. Subtle rising musical tone into second product reveal (2.4s)
+        const riseOsc = audioCtx.createOscillator();
+        const riseGain = audioCtx.createGain();
+        riseOsc.type = "sine";
+        riseOsc.frequency.setValueAtTime(261.63, now + 0.8); // C4
+        riseOsc.frequency.exponentialRampToValueAtTime(523.25, now + 2.4); // C5
+        riseGain.gain.setValueAtTime(0.001, now + 0.8);
+        riseGain.gain.linearRampToValueAtTime(0.12, now + 2.2);
+        riseGain.gain.exponentialRampToValueAtTime(0.001, now + 4.2);
+        riseOsc.connect(riseGain);
+        riseGain.connect(audioCtx.destination);
+        riseOsc.start(now + 0.8);
+        riseOsc.stop(now + 4.3);
+
+        // C. Crystalline chime at second product arrival (2.4s)
+        const chime = audioCtx.createOscillator();
+        const chimeG = audioCtx.createGain();
+        chime.type = "sine";
+        chime.frequency.setValueAtTime(1318.51, now + 2.4); // E6
+        chimeG.gain.setValueAtTime(0.001, now + 2.4);
+        chimeG.gain.linearRampToValueAtTime(0.10, now + 2.44);
+        chimeG.gain.exponentialRampToValueAtTime(0.0001, now + 4.5);
+        chime.connect(chimeG);
+        chimeG.connect(audioCtx.destination);
+        chime.start(now + 2.4);
+        chime.stop(now + 4.6);
+      } else if (currentShot === "shot05") {
+        // Shot 05 Moment of Delight:
+        // A. Subtle room air ambience & gentle fabric movement
+        const bufferSize = audioCtx.sampleRate * 3.0;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(600, now);
+        filter.frequency.exponentialRampToValueAtTime(1800, now + 2.2);
+        filter.frequency.exponentialRampToValueAtTime(500, now + 4.2);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.001, now);
+        noiseGain.gain.linearRampToValueAtTime(0.08, now + 1.8);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 4.4);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        whiteNoise.start(now);
+        whiteNoise.stop(now + 4.5);
+
+        // B. Tactile pickup click / material resonance (2.2s)
+        const clickOsc = audioCtx.createOscillator();
+        const clickGain = audioCtx.createGain();
+        clickOsc.type = "triangle";
+        clickOsc.frequency.setValueAtTime(520, now + 2.15);
+        clickOsc.frequency.exponentialRampToValueAtTime(260, now + 2.3);
+        clickGain.gain.setValueAtTime(0.001, now + 2.15);
+        clickGain.gain.linearRampToValueAtTime(0.12, now + 2.18);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.45);
+        clickOsc.connect(clickGain);
+        clickGain.connect(audioCtx.destination);
+        clickOsc.start(now + 2.15);
+        clickOsc.stop(now + 2.5);
+
+        // C. Warm optimistic acoustic chord progression (G - C)
+        const chordNotes = [392.00, 493.88, 587.33]; // G4, B4, D5
+        chordNotes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + 2.0 + idx * 0.05);
+          g.gain.setValueAtTime(0.001, now + 2.0 + idx * 0.05);
+          g.gain.linearRampToValueAtTime(0.06 / (idx + 1), now + 2.4 + idx * 0.05);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
+          osc.connect(g);
+          g.connect(audioCtx.destination);
+          osc.start(now + 2.0 + idx * 0.05);
+          osc.stop(now + 4.9);
+        });
+      } else if (currentShot === "shot06") {
+        // Shot 06 Finale - Things Worth Finding:
+        // A. Gentle emotional peak swell
+        const swell = audioCtx.createOscillator();
+        const swellG = audioCtx.createGain();
+        swell.type = "sine";
+        swell.frequency.setValueAtTime(130.81, now); // C3
+        swell.frequency.exponentialRampToValueAtTime(261.63, now + 2.8); // C4
+        swellG.gain.setValueAtTime(0.001, now);
+        swellG.gain.linearRampToValueAtTime(0.14, now + 2.2);
+        swellG.gain.exponentialRampToValueAtTime(0.0001, now + 4.2);
+        swell.connect(swellG);
+        swellG.connect(audioCtx.destination);
+        swell.start(now);
+        swell.stop(now + 4.3);
+
+        // B. Soft airy circular orbit whoosh (0.0s - 2.8s)
+        const bufferSize = audioCtx.sampleRate * 2.8;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(500, now);
+        filter.frequency.exponentialRampToValueAtTime(1800, now + 1.8);
+        filter.frequency.exponentialRampToValueAtTime(400, now + 3.0);
+        filter.Q.setValueAtTime(2.0, now);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.001, now);
+        noiseGain.gain.linearRampToValueAtTime(0.10, now + 1.6);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 3.2);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        whiteNoise.start(now);
+        whiteNoise.stop(now + 3.3);
+
+        // C. Crystalline sparkle chime at Logo Reveal (3.0s)
+        const logoChimes = [1046.5, 1318.51, 1567.98, 2093.0]; // C6, E6, G6, C7
+        logoChimes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + 2.9 + idx * 0.04);
+          g.gain.setValueAtTime(0.001, now + 2.9 + idx * 0.04);
+          g.gain.linearRampToValueAtTime(0.08 / (idx + 1), now + 2.95 + idx * 0.04);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 4.6);
+          osc.connect(g);
+          g.connect(audioCtx.destination);
+          osc.start(now + 2.9 + idx * 0.04);
+          osc.stop(now + 4.8);
+        });
+      }
+    } catch (e) {
+      console.warn("Audio synthesis notice:", e);
+    }
+  }
+
+  // Switch between Shot 01, Shot 02, Shot 03, Shot 04, Shot 05, Shot 06, and Full Film
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => {
+        t.classList.remove("active");
+        t.setAttribute("aria-selected", "false");
+      });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+
+      const videoSrc = tab.getAttribute("data-video-src");
+      const poster = tab.getAttribute("data-poster");
+      const tag = tab.getAttribute("data-tag");
+      const fps = tab.getAttribute("data-fps");
+      const title = tab.getAttribute("data-title");
+      const badge = tab.getAttribute("data-section-badge");
+
+      if (tab.id === "tab-shot-01") currentShot = "shot01";
+      else if (tab.id === "tab-shot-02") currentShot = "shot02";
+      else if (tab.id === "tab-shot-03") currentShot = "shot03";
+      else if (tab.id === "tab-shot-04") currentShot = "shot04";
+      else if (tab.id === "tab-shot-05") currentShot = "shot05";
+      else if (tab.id === "tab-shot-06") currentShot = "shot06";
+      else currentShot = "full";
+
+      if (sectionBadge && badge) sectionBadge.textContent = badge;
+      if (pillText && tag) pillText.textContent = tag;
+      if (qualityBadge && fps) qualityBadge.textContent = fps;
+      if (captionTitle && title) captionTitle.textContent = title;
+
+      if (video.src !== videoSrc) {
+        const wasPaused = video.paused;
+        video.src = videoSrc;
+        if (poster) video.poster = poster;
+        video.currentTime = 0;
+        video.load();
+
+        if (!wasPaused) {
+          video.play().catch(() => {});
+          if (!video.muted && currentShot.startsWith("shot")) {
+            playCinematicShotSound();
+          }
+        }
+      }
+    });
+  });
+
+  // Replay Button
+  replayBtn?.addEventListener("click", () => {
+    video.currentTime = 0;
+    video.play().then(() => {
+      if (iconPlay) iconPlay.style.display = "none";
+      if (iconPause) iconPause.style.display = "block";
+      if (!video.muted && currentShot.startsWith("shot")) {
+        playCinematicShotSound();
+      }
+    }).catch(() => {});
+  });
+
   // Play / Pause toggle
   playBtn?.addEventListener("click", () => {
     if (video.paused) {
-      video.play().catch(() => {});
-      if (iconPlay) iconPlay.style.display = "none";
-      if (iconPause) iconPause.style.display = "block";
+      video.play().then(() => {
+        if (iconPlay) iconPlay.style.display = "none";
+        if (iconPause) iconPause.style.display = "block";
+        if (!video.muted && currentShot.startsWith("shot")) {
+          playCinematicShotSound();
+        }
+      }).catch(() => {});
     } else {
       video.pause();
       if (iconPlay) iconPlay.style.display = "block";
@@ -760,6 +1156,16 @@ function initPromoVideo() {
     } else {
       if (iconSound) iconSound.style.display = "block";
       if (iconMuted) iconMuted.style.display = "none";
+      if (currentShot.startsWith("shot")) {
+        playCinematicShotSound();
+      }
+    }
+  });
+
+  // Loop trigger event
+  video.addEventListener("seeked", () => {
+    if (video.currentTime < 0.3 && !video.muted && currentShot.startsWith("shot")) {
+      playCinematicShotSound();
     }
   });
 

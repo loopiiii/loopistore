@@ -71,7 +71,7 @@ loopistore/
 │   └── app.js              # Xử lý giao diện, bộ lọc, modal & video controller
 └── assets/
     ├── images/             # Toàn bộ hình ảnh sản phẩm, logo, banner
-    └── videos/             # Video quảng cáo thương hiệu cinematic (loopi-commercial.mp4)
+    └── videos/             # Video thương hiệu cinematic (loopi-commercial-final.mp4)
 ```
 
 ---
