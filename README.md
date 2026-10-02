@@ -49,6 +49,10 @@ Giao diện được thiết kế thích ứng động bằng **CSS Grid, Flexbo
    - Gợi ý ngẫu nhiên một món đồ thú vị mỗi lần bấm.
 6. **Mobile Navigation Drawer:**
    - Menu di động trượt từ bên trái với trải nghiệm cảm ứng mượt mà.
+7. **Phim ngắn Quảng cáo Thương hiệu (LOOPI Cinema Commercial - 24s):**
+   - Video cinematic chuẩn HD phong cách visual storytelling cao cấp ("Things Worth Finding").
+   - Tích hợp `IntersectionObserver` tự động phát thông minh, tiết kiệm pin và dung lượng trên điện thoại.
+   - Nút bật/tắt âm thanh và nút dừng/phát nhanh chóng.
 
 ---
 
@@ -64,12 +68,10 @@ loopistore/
 ├── js/
 │   ├── products.js         # Dữ liệu sản phẩm & danh mục
 │   ├── cart.js             # Logic giỏ hàng, mã giảm giá & Wishlist
-│   └── app.js              # Xử lý giao diện, bộ lọc, modal & sự kiện
+│   └── app.js              # Xử lý giao diện, bộ lọc, modal & video controller
 └── assets/
-    └── images/             # Toàn bộ hình ảnh sản phẩm, logo, banner
-        ├── loopi-logo.png
-        ├── hero.jpg
-        └── ...
+    ├── images/             # Toàn bộ hình ảnh sản phẩm, logo, banner
+    └── videos/             # Video quảng cáo thương hiệu cinematic (loopi-commercial.mp4)
 ```
 
 ---

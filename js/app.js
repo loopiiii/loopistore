@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCheckoutModal();
   initCanvasConfetti();
   initScrollEffects();
+  initPromoVideo();
 });
 
 let currentCategoryFilter = "all";
@@ -720,4 +721,67 @@ function initScrollEffects() {
   }, { threshold: 0.1 });
 
   document.querySelectorAll(".reveal-on-scroll").forEach(el => observer.observe(el));
+}
+
+/**
+ * Promotional Cinematic Video Controller (LoopiPromo)
+ * Tự động phát khi cuộn vào viewport, tiết kiệm pin khi ra ngoài, hỗ trợ nút Play/Mute
+ */
+function initPromoVideo() {
+  const video = document.getElementById("loopi-promo-video");
+  const playBtn = document.getElementById("promo-play-btn");
+  const soundBtn = document.getElementById("promo-sound-btn");
+  if (!video) return;
+
+  const iconPlay = playBtn?.querySelector(".icon-play");
+  const iconPause = playBtn?.querySelector(".icon-pause");
+  const iconSound = soundBtn?.querySelector(".icon-sound");
+  const iconMuted = soundBtn?.querySelector(".icon-muted");
+
+  // Play / Pause toggle
+  playBtn?.addEventListener("click", () => {
+    if (video.paused) {
+      video.play().catch(() => {});
+      if (iconPlay) iconPlay.style.display = "none";
+      if (iconPause) iconPause.style.display = "block";
+    } else {
+      video.pause();
+      if (iconPlay) iconPlay.style.display = "block";
+      if (iconPause) iconPause.style.display = "none";
+    }
+  });
+
+  // Sound toggle
+  soundBtn?.addEventListener("click", () => {
+    video.muted = !video.muted;
+    if (video.muted) {
+      if (iconSound) iconSound.style.display = "none";
+      if (iconMuted) iconMuted.style.display = "block";
+    } else {
+      if (iconSound) iconSound.style.display = "block";
+      if (iconMuted) iconMuted.style.display = "none";
+    }
+  });
+
+  // Auto-pause / resume based on visibility (saves mobile CPU & data)
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          video.play().then(() => {
+            if (iconPlay) iconPlay.style.display = "none";
+            if (iconPause) iconPause.style.display = "block";
+          }).catch(() => {});
+        } else {
+          if (!video.paused) {
+            video.pause();
+            if (iconPlay) iconPlay.style.display = "block";
+            if (iconPause) iconPause.style.display = "none";
+          }
+        }
+      });
+    }, { threshold: 0.25 });
+
+    observer.observe(video);
+  }
 }

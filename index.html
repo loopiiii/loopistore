@@ -263,6 +263,78 @@
       </div>
     </section>
 
+    <!-- 4.5. Promotional Cinematic Showcase Section -->
+    <section class="promo-video-section" id="promo-video">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">LOOPI CINEMA • 24S</span>
+          <h2 class="section-title">Things Worth Finding</h2>
+          <p class="section-subtitle">
+            Cảm nhận nhịp sống, sự tinh tế và niềm vui bất ngờ trong từng món đồ nhỏ được tuyển chọn kỹ lưỡng.
+          </p>
+        </div>
+
+        <div class="promo-video-container" id="loopi-promo-card">
+          <div class="promo-video-frame">
+            <video
+              id="loopi-promo-video"
+              class="promo-video-element"
+              poster="assets/images/hero.jpg"
+              playsinline
+              muted
+              loop
+              preload="metadata"
+              aria-label="Phim quảng cáo thương hiệu LOOPI">
+              <source src="assets/videos/loopi-commercial.mp4" type="video/mp4" />
+              Trình duyệt của bạn không hỗ trợ phát video trực tiếp.
+            </video>
+
+            <!-- Video Ambient Gradient & Overlay -->
+            <div class="promo-video-overlay">
+              <div class="promo-overlay-top">
+                <span class="promo-pill">
+                  <span class="live-dot"></span>
+                  <span>BRAND FILM</span>
+                </span>
+                <span class="promo-quality-badge">HD • 30FPS</span>
+              </div>
+
+              <div class="promo-overlay-bottom">
+                <div class="promo-caption">
+                  <span class="caption-tag">LOOPI STORE</span>
+                  <h3 class="caption-title">Curated For The Curious</h3>
+                </div>
+
+                <div class="promo-actions">
+                  <button class="promo-ctrl-btn" id="promo-play-btn" title="Phát hoặc Tạm dừng" aria-label="Phát hoặc tạm dừng video">
+                    <svg class="icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
+                      <rect x="14" y="4" width="4" height="16" rx="1.5"></rect>
+                    </svg>
+                    <svg class="icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </button>
+
+                  <button class="promo-ctrl-btn" id="promo-sound-btn" title="Bật hoặc Tắt tiếng" aria-label="Bật hoặc tắt tiếng video">
+                    <svg class="icon-muted" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <line x1="23" y1="9" x2="17" y2="15"></line>
+                      <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                    <svg class="icon-sound" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 5. Discovery Section -->
     <section class="discovery-section" id="discover">
       <div class="discovery-bg-ambient"></div>
