@@ -751,31 +751,48 @@
     </div>
   </div>
 
-  <!-- Checkout Success Modal -->
+  <!-- Checkout Success Modal (Warm & Editorial LOOPI Experience) -->
   <div class="modal-backdrop" id="checkout-modal-backdrop"></div>
-  <div class="checkout-modal-dialog" id="checkout-success-modal" role="dialog" aria-modal="true">
+  <div class="checkout-modal-dialog" id="checkout-success-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title">
     <button class="modal-close-btn" id="checkout-modal-close" aria-label="Đóng thông báo">&times;</button>
-    <div class="celebration-icon">🎉</div>
-    <h3 style="font-size: 1.6rem; color: var(--color-primary); margin-bottom: 8px;">Đặt hàng thành công!</h3>
-    <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 20px;">
-      Cảm ơn bạn đã khám phá cùng LOOPI! Đơn hàng đang được đóng gói cẩn thận cùng bao bì đặc trưng và một set sticker
-      bất ngờ.
+    
+    <div class="checkout-emblem" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+      </svg>
+    </div>
+
+    <h3 class="checkout-title" id="checkout-modal-title">Cảm ơn bạn đã ghé LOOPI ♡</h3>
+    
+    <p class="checkout-text-intro">
+      Cảm ơn vì đã dành thời gian khám phá và quan tâm đến những điều nhỏ xinh tại LOOPI.
     </p>
 
-    <div
-      style="background: var(--color-surface); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px; text-align: left;">
-      <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
+    <div class="checkout-order-card">
+      <div class="checkout-order-row">
         <span style="color: var(--color-text-muted);">Mã đơn hàng:</span>
-        <strong id="order-number-display" style="color: var(--color-primary);">LP-782941</strong>
+        <strong id="order-number-display" style="color: var(--color-primary); font-family: monospace; font-size: 0.95rem;">LP-782941</strong>
       </div>
-      <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
+      <div class="checkout-order-row">
         <span style="color: var(--color-text-muted);">Tổng thanh toán:</span>
-        <strong id="order-total-display" style="color: var(--color-accent); font-size: 1.1rem;">0₫</strong>
+        <strong id="order-total-display" style="color: var(--color-accent); font-size: 1.05rem;">0₫</strong>
       </div>
     </div>
 
-    <button class="btn btn-primary" id="checkout-continue-btn" style="width: 100%;">
-      Tiếp tục khám phá
+    <div class="checkout-concept-note">
+      <p style="margin: 0;">
+        Đơn hàng của bạn đã được ghi nhận.<br />
+        Một số sản phẩm và hình ảnh trên website hiện mang tính minh họa cho concept trải nghiệm LOOPI.
+      </p>
+    </div>
+
+    <p class="checkout-signature">
+      Hẹn gặp bạn trong một vòng khám phá khác.<br />
+      <span style="color: var(--color-accent); font-weight: 700; letter-spacing: 0.05em;">— LOOPI</span>
+    </p>
+
+    <button class="checkout-continue-btn" id="checkout-continue-btn">
+      <span>Tiếp tục khám phá ↻</span>
     </button>
   </div>
 

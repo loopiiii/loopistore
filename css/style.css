@@ -2792,19 +2792,22 @@ h6 {
   object-fit: cover;
 }
 
-/* --- Checkout Success Modal --- */
+/* --- Checkout Success Modal (Warm & Editorial LOOPI Experience) --- */
 .checkout-modal-dialog {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 90%;
-  max-width: 520px;
+  width: 92%;
+  max-width: 480px;
   background: #FFFFFF;
-  border-radius: var(--radius-2xl);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+  background-image: radial-gradient(circle at 10% 10%, rgba(210, 110, 158, 0.05) 0%, transparent 45%),
+                    radial-gradient(circle at 90% 90%, rgba(49, 90, 166, 0.05) 0%, transparent 45%);
+  border-radius: 28px;
+  border: 1px solid rgba(49, 90, 166, 0.08);
+  box-shadow: 0 25px 70px rgba(21, 39, 73, 0.22);
   z-index: 310;
-  padding: 48px;
+  padding: 40px 36px 36px;
   text-align: center;
   opacity: 0;
   visibility: hidden;
@@ -2817,10 +2820,118 @@ h6 {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.celebration-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  animation: bounceCelebration 1s ease infinite alternate;
+.checkout-emblem {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(210, 110, 158, 0.12) 0%, rgba(49, 90, 166, 0.12) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  box-shadow: 0 8px 20px rgba(210, 110, 158, 0.15);
+  animation: emblemPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes emblemPulse {
+  0% { transform: scale(1); box-shadow: 0 8px 20px rgba(210, 110, 158, 0.15); }
+  100% { transform: scale(1.05); box-shadow: 0 12px 28px rgba(49, 90, 166, 0.20); }
+}
+
+.checkout-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+
+.checkout-text-intro {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: 14px;
+}
+
+.checkout-concept-note {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  background: rgba(245, 247, 250, 0.85);
+  border: 1px solid rgba(49, 90, 166, 0.06);
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  font-style: normal;
+  text-align: center;
+}
+
+.checkout-order-card {
+  background: #FAFBFC;
+  border: 1px dashed rgba(49, 90, 166, 0.16);
+  padding: 14px 18px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.checkout-order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.86rem;
+}
+
+.checkout-order-row:not(:last-child) {
+  margin-bottom: 6px;
+}
+
+.checkout-signature {
+  font-size: 0.90rem;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+.checkout-continue-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-spring);
+  box-shadow: 0 4px 14px rgba(49, 90, 166, 0.25);
+}
+
+.checkout-continue-btn:hover {
+  background: #254480;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(49, 90, 166, 0.32);
+}
+
+.checkout-continue-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 540px) {
+  .checkout-modal-dialog {
+    padding: 30px 20px 24px;
+    border-radius: 22px;
+  }
+  .checkout-title {
+    font-size: 1.35rem;
+  }
 }
 
 /* --- Toast Floating System --- */
