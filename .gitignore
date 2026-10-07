@@ -12,6 +12,8 @@ assets/images_backup/
 loopi
 my
 loopistore.zip
+*.pdf
+*.mp3
 
 # OS generated files
 .DS_Store

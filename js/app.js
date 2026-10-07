@@ -686,7 +686,7 @@ function initCheckoutModal() {
 function initCanvasConfetti() {
   window.confettiEffect = function () {
     const count = 75;
-    const colors = ["#315AA6", "#85A8DB", "#D26E9E", "#FFD166", "#06D6A0"];
+    const colors = ["#3E9579", "#E597C1", "#D4DBDE", "#EFC7DC", "#327A63"];
 
     for (let i = 0; i < count; i++) {
       const confetti = document.createElement("div");
